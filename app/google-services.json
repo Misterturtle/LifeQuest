@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "53524465986",
+    "firebase_url": "https://life-quest-a01de.firebaseio.com",
+    "project_id": "life-quest-a01de",
+    "storage_bucket": "life-quest-a01de.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:53524465986:android:870f12cd834a8338",
+        "android_client_info": {
+          "package_name": "turtleraine.sandbox.com.lifequest"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "53524465986-ltmmrf3507n6fi4scpbqnik14acalfub.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "turtleraine.sandbox.com.lifequest",
+            "certificate_hash": "1228b75ece2322a6c619cb566471b1833b421024"
+          }
+        },
+        {
+          "client_id": "53524465986-tf26844p17qhbkjbgcs06k6vh6nfnarj.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBHsQT1BUjXZXzv5jQhBgpHCSc2JGiTDqQ"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "53524465986-tf26844p17qhbkjbgcs06k6vh6nfnarj.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
