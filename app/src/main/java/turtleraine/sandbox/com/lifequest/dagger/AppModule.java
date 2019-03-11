@@ -10,6 +10,7 @@ import turtleraine.sandbox.com.lifequest.Application.MainActivityImpl;
 import turtleraine.sandbox.com.lifequest.Factories.FragmentFactory;
 import turtleraine.sandbox.com.lifequest.Factories.IntentFactory;
 import turtleraine.sandbox.com.lifequest.components.MainMenu.MainMenuImpl;
+import turtleraine.sandbox.com.lifequest.components.MainMenu.fragments.CreateTaskFragmentImpl;
 import turtleraine.sandbox.com.lifequest.components.MainMenu.fragments.NoTasksFragmentImpl;
 import turtleraine.sandbox.com.lifequest.repositories.LocalTaskRepository;
 import turtleraine.sandbox.com.lifequest.services.TaskService;
@@ -24,6 +25,8 @@ public class AppModule {
         this.appContext = appContext;
     }
 
+
+    // ------------------------- Impl --------------------- //
     @Singleton
     @Provides
     protected MainActivityImpl makeMainActivityImpl() {
@@ -40,6 +43,12 @@ public class AppModule {
     @Provides
     protected MainMenuImpl makeMainMenuImpl() {
         return new MainMenuImpl();
+    }
+
+    @Singleton
+    @Provides
+    protected CreateTaskFragmentImpl createTaskFragment() {
+        return new CreateTaskFragmentImpl();
     }
 
     // ----------------------- Services ------------------ //

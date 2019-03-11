@@ -1,4 +1,4 @@
-package helpers.error_handling;
+package turtleraine.sandbox.com.lifequest.helpers.error_handling;
 
 import java.util.function.Supplier;
 

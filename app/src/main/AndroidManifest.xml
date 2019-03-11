@@ -16,7 +16,6 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".TownMenu.TownMenuQtn" />
         <activity android:name=".components.MainMenu.MainMenuQtn" />
     </application>
 

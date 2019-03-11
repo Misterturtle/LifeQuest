@@ -1,4 +1,4 @@
-package helpers.error_handling;
+package turtleraine.sandbox.com.lifequest.helpers.error_handling;
 
 public class Success<T> implements TryResult<T>{
 

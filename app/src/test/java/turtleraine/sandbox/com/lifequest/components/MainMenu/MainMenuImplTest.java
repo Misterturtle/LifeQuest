@@ -4,10 +4,12 @@ import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.view.MenuItem;
 import android.widget.FrameLayout;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 
 import java.util.Arrays;
@@ -16,6 +18,7 @@ import java.util.Collections;
 import turtleraine.sandbox.com.lifequest.Application.DaggerTest;
 import turtleraine.sandbox.com.lifequest.Factories.FragmentFactory;
 import turtleraine.sandbox.com.lifequest.R;
+import turtleraine.sandbox.com.lifequest.components.MainMenu.fragments.CreateTaskFragmentQtn;
 import turtleraine.sandbox.com.lifequest.components.MainMenu.fragments.NoTasksFragmentQtn;
 import turtleraine.sandbox.com.lifequest.entities.TaskEntity;
 import turtleraine.sandbox.com.lifequest.services.TaskService;
@@ -49,6 +52,12 @@ public class MainMenuImplTest extends DaggerTest {
     @Mock
     private NoTasksFragmentQtn mockNoTasksFragment;
 
+    @Mock
+    private MenuItem mockMenuItem;
+
+    @Mock
+    private CreateTaskFragmentQtn mockCreateTaskFragmentQtn;
+
     MainMenuImpl subject;
 
     FragmentFactory mockFragmentFactory;
@@ -61,12 +70,13 @@ public class MainMenuImplTest extends DaggerTest {
         mockFragmentFactory = testAppModule.makeFragmentFactory();
         mockTaskService = testAppModule.makeTaskService();
 
-        when(mockQtn.findViewById(R.id.navigation)).thenReturn(mockNavBarView);
+        when(mockQtn.findViewById(R.id.main_menu_bottom_nav_bar)).thenReturn(mockNavBarView);
         when(mockTransaction.replace(any(Integer.class), any())).thenReturn(mockTransaction);
 
         when(mockQtn.getSupportFragmentManager()).thenReturn(mockFragmentManager);
         when(mockFragmentManager.beginTransaction()).thenReturn(mockTransaction);
         when(mockFragmentFactory.create(NoTasksFragmentQtn.class)).thenReturn(mockNoTasksFragment);
+        when(mockFragmentFactory.create(CreateTaskFragmentQtn.class)).thenReturn(mockCreateTaskFragmentQtn);
 
         subject = new MainMenuImpl();
         subject.onCreate(null, mockQtn);
@@ -78,12 +88,25 @@ public class MainMenuImplTest extends DaggerTest {
     }
 
     @Test
+    public void whenCreateTaskNavButtonIsTappedThenTheCreateTaskFragmentIsLoaded() {
+        ArgumentCaptor<BottomNavigationView.OnNavigationItemSelectedListener> captor = ArgumentCaptor.forClass(BottomNavigationView.OnNavigationItemSelectedListener.class);
+        verify(mockNavBarView).setOnNavigationItemSelectedListener(captor.capture());
+
+        when(mockMenuItem.getItemId()).thenReturn(R.id.navigation_create_task);
+
+        captor.getValue().onNavigationItemSelected(mockMenuItem);
+
+        verify(mockTransaction).replace(R.id.main_menu_fragment_container, mockCreateTaskFragmentQtn);
+        verify(mockTransaction).commit();
+    }
+
+    @Test
     public void givenNoTasksTheMainViewReflectsNoTasks() {
         when(mockTaskService.getTasks()).thenReturn(Collections.emptyList());
 
         subject.onResume(mockQtn);
 
-        verify(mockTransaction).replace(R.id.mainMenuFragmentContainer, mockNoTasksFragment);
+        verify(mockTransaction).replace(R.id.main_menu_fragment_container, mockNoTasksFragment);
         verify(mockTransaction).commit();
     }
 
@@ -96,5 +119,6 @@ public class MainMenuImplTest extends DaggerTest {
         verify(mockTransaction, never()).replace(any(Integer.class), any());
         verify(mockTransaction, never()).commit();
     }
+
 
 }

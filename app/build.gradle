@@ -54,6 +54,7 @@ dependencies {
 
 //    compile 'com.google.firebase:firebase-admin:6.7.0'
 
+//    implementation 'com.android.support:design:26.1.0'
     implementation 'com.android.support:design:26.1.0'
     compile group: 'com.android.support', name: 'appcompat-v7', version: '26.1.0'
 
