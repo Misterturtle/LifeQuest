@@ -6,9 +6,8 @@ import org.mockito.Mock;
 
 import turtleraine.sandbox.com.lifequest.Factories.FragmentFactory;
 import turtleraine.sandbox.com.lifequest.Factories.IntentFactory;
-import turtleraine.sandbox.com.lifequest.components.MainMenu.fragments.NoTasksFragmentImpl;
 import turtleraine.sandbox.com.lifequest.dagger.AppModule;
-import turtleraine.sandbox.com.lifequest.repositories.LocalTaskRepository;
+import turtleraine.sandbox.com.lifequest.repositories.FirestoreRepository;
 import turtleraine.sandbox.com.lifequest.services.TaskService;
 import turtleraine.sandbox.com.lifequest.wrappers.FirestoreWrapper;
 
@@ -59,9 +58,9 @@ public class TestAppModule extends AppModule {
     }
 
     @Mock
-    private LocalTaskRepository mockLocalTaskRepository;
+    private FirestoreRepository mockFirestoreRepository;
     @Override
-    public LocalTaskRepository makeLocalTaskRepository() {
-        return mockLocalTaskRepository;
+    public FirestoreRepository makeFirestoreRepository() {
+        return mockFirestoreRepository;
     }
 }

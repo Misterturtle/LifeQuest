@@ -22,4 +22,9 @@ public class CreateTaskFragmentQtn extends Fragment {
         Injector.getInjector().inject(this);
         return impl.onCreateView(inflater, container, savedInstanceState, this);
     }
+
+    @Override
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        impl.onViewCreated(view, savedInstanceState);
+    }
 }

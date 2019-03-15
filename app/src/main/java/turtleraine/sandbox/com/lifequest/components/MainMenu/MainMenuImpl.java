@@ -3,6 +3,7 @@ package turtleraine.sandbox.com.lifequest.components.MainMenu;
 import android.os.Bundle;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.FragmentTransaction;
+import android.util.Log;
 
 import javax.inject.Inject;
 
@@ -47,16 +48,17 @@ public class MainMenuImpl {
     }
 
     public void onResume(MainMenuQtn qtn) {
-        if (taskService.getTasks().isEmpty()) {
-            NoTasksFragmentQtn noTasksFragment = fragmentFactory.create(NoTasksFragmentQtn.class);
+        taskService.getTasks()
+                .whenComplete((tasks, error) -> {
+                    if (tasks != null) {
+                        if (tasks.isEmpty()) {
+                            NoTasksFragmentQtn noTasksFragment = fragmentFactory.create(NoTasksFragmentQtn.class);
 
-            FragmentTransaction transaction = qtn.getSupportFragmentManager().beginTransaction();
-            transaction.replace(R.id.main_menu_fragment_container, noTasksFragment);
-            transaction.commit();
-        }
+                            FragmentTransaction transaction = qtn.getSupportFragmentManager().beginTransaction();
+                            transaction.replace(R.id.main_menu_fragment_container, noTasksFragment);
+                            transaction.commit();
+                        }
+                    }
+                });
     }
-
-
-
-
 }

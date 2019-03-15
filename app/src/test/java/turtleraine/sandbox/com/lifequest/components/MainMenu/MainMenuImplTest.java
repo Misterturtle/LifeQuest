@@ -14,6 +14,7 @@ import org.mockito.Mock;
 
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.concurrent.CompletableFuture;
 
 import turtleraine.sandbox.com.lifequest.Application.DaggerTest;
 import turtleraine.sandbox.com.lifequest.Factories.FragmentFactory;
@@ -102,7 +103,7 @@ public class MainMenuImplTest extends DaggerTest {
 
     @Test
     public void givenNoTasksTheMainViewReflectsNoTasks() {
-        when(mockTaskService.getTasks()).thenReturn(Collections.emptyList());
+        when(mockTaskService.getTasks()).thenReturn(CompletableFuture.completedFuture(Collections.emptyList()));
 
         subject.onResume(mockQtn);
 
@@ -112,7 +113,7 @@ public class MainMenuImplTest extends DaggerTest {
 
     @Test
     public void givenSomeTasksTheMainViewDoesNotReflectNoTasks() {
-        when(mockTaskService.getTasks()).thenReturn(Arrays.asList(new TaskEntity("turtle")));
+        when(mockTaskService.getTasks()).thenReturn(CompletableFuture.completedFuture(Arrays.asList(new TaskEntity("turtle"))));
 
         subject.onResume(mockQtn);
 

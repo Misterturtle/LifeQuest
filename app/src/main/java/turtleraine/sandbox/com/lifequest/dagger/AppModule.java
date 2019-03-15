@@ -12,7 +12,7 @@ import turtleraine.sandbox.com.lifequest.Factories.IntentFactory;
 import turtleraine.sandbox.com.lifequest.components.MainMenu.MainMenuImpl;
 import turtleraine.sandbox.com.lifequest.components.MainMenu.fragments.CreateTaskFragmentImpl;
 import turtleraine.sandbox.com.lifequest.components.MainMenu.fragments.NoTasksFragmentImpl;
-import turtleraine.sandbox.com.lifequest.repositories.LocalTaskRepository;
+import turtleraine.sandbox.com.lifequest.repositories.FirestoreRepository;
 import turtleraine.sandbox.com.lifequest.services.TaskService;
 import turtleraine.sandbox.com.lifequest.wrappers.FirestoreWrapper;
 
@@ -67,8 +67,8 @@ public class AppModule {
 
     @Singleton
     @Provides
-    protected LocalTaskRepository makeLocalTaskRepository() {
-        return new LocalTaskRepository();
+    protected FirestoreRepository makeFirestoreRepository() {
+        return new FirestoreRepository();
     }
 
     // ----------------------- Factories -------------------- //
