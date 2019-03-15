@@ -8,4 +8,6 @@
     <string name="create_task_title">Create Task</string>
     <string name="task_name_field_title">Task Name</string>
     <string name="description_field_title">Description</string>
+    <string name="task_name_placeholder">Task Name Goes Here</string>
+    <string name="task_description_placeholder">Task_Description_Goes_Here</string>
 </resources>

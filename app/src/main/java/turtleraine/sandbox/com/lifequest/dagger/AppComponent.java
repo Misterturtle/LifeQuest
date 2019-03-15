@@ -10,6 +10,8 @@ import turtleraine.sandbox.com.lifequest.components.MainMenu.MainMenuQtn;
 import turtleraine.sandbox.com.lifequest.components.MainMenu.fragments.CreateTaskFragmentImpl;
 import turtleraine.sandbox.com.lifequest.components.MainMenu.fragments.CreateTaskFragmentQtn;
 import turtleraine.sandbox.com.lifequest.components.MainMenu.fragments.NoTasksFragmentQtn;
+import turtleraine.sandbox.com.lifequest.components.MainMenu.fragments.TaskViewFragmentImpl;
+import turtleraine.sandbox.com.lifequest.components.MainMenu.fragments.TaskViewFragmentQtn;
 import turtleraine.sandbox.com.lifequest.repositories.FirestoreRepository;
 import turtleraine.sandbox.com.lifequest.services.TaskService;
 
@@ -26,4 +28,6 @@ public interface AppComponent {
     void inject(CreateTaskFragmentQtn createTaskFragmentQtn);
     void inject(FirestoreRepository firestoreRepository);
     void inject(CreateTaskFragmentImpl createTaskFragment);
+    void inject(TaskViewFragmentQtn taskViewFragmentQtn);
+    void inject(TaskViewFragmentImpl taskViewFragment);
 }

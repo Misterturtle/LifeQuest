@@ -21,6 +21,7 @@ import turtleraine.sandbox.com.lifequest.Factories.FragmentFactory;
 import turtleraine.sandbox.com.lifequest.R;
 import turtleraine.sandbox.com.lifequest.components.MainMenu.fragments.CreateTaskFragmentQtn;
 import turtleraine.sandbox.com.lifequest.components.MainMenu.fragments.NoTasksFragmentQtn;
+import turtleraine.sandbox.com.lifequest.components.MainMenu.fragments.TaskViewFragmentQtn;
 import turtleraine.sandbox.com.lifequest.entities.TaskEntity;
 import turtleraine.sandbox.com.lifequest.services.TaskService;
 
@@ -59,6 +60,9 @@ public class MainMenuImplTest extends DaggerTest {
     @Mock
     private CreateTaskFragmentQtn mockCreateTaskFragmentQtn;
 
+    @Mock
+    private TaskViewFragmentQtn mockTaskViewFragment;
+
     MainMenuImpl subject;
 
     FragmentFactory mockFragmentFactory;
@@ -78,6 +82,7 @@ public class MainMenuImplTest extends DaggerTest {
         when(mockFragmentManager.beginTransaction()).thenReturn(mockTransaction);
         when(mockFragmentFactory.create(NoTasksFragmentQtn.class)).thenReturn(mockNoTasksFragment);
         when(mockFragmentFactory.create(CreateTaskFragmentQtn.class)).thenReturn(mockCreateTaskFragmentQtn);
+        when(mockFragmentFactory.create(TaskViewFragmentQtn.class)).thenReturn(mockTaskViewFragment);
 
         subject = new MainMenuImpl();
         subject.onCreate(null, mockQtn);
@@ -112,14 +117,12 @@ public class MainMenuImplTest extends DaggerTest {
     }
 
     @Test
-    public void givenSomeTasksTheMainViewDoesNotReflectNoTasks() {
+    public void givenSomeTasksTheMainViewDoesNotReflectsTaskView() {
         when(mockTaskService.getTasks()).thenReturn(CompletableFuture.completedFuture(Arrays.asList(new TaskEntity("turtle"))));
 
         subject.onResume(mockQtn);
 
-        verify(mockTransaction, never()).replace(any(Integer.class), any());
-        verify(mockTransaction, never()).commit();
+        verify(mockTransaction).replace(R.id.main_menu_fragment_container, mockTaskViewFragment);
+        verify(mockTransaction).commit();
     }
-
-
 }

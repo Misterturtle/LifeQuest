@@ -12,6 +12,7 @@ import turtleraine.sandbox.com.lifequest.Factories.FragmentFactory;
 import turtleraine.sandbox.com.lifequest.R;
 import turtleraine.sandbox.com.lifequest.components.MainMenu.fragments.CreateTaskFragmentQtn;
 import turtleraine.sandbox.com.lifequest.components.MainMenu.fragments.NoTasksFragmentQtn;
+import turtleraine.sandbox.com.lifequest.components.MainMenu.fragments.TaskViewFragmentQtn;
 import turtleraine.sandbox.com.lifequest.services.TaskService;
 
 /**
@@ -56,6 +57,12 @@ public class MainMenuImpl {
 
                             FragmentTransaction transaction = qtn.getSupportFragmentManager().beginTransaction();
                             transaction.replace(R.id.main_menu_fragment_container, noTasksFragment);
+                            transaction.commit();
+                        } else {
+                            TaskViewFragmentQtn taskViewFragment = fragmentFactory.create(TaskViewFragmentQtn.class);
+
+                            FragmentTransaction transaction = qtn.getSupportFragmentManager().beginTransaction();
+                            transaction.replace(R.id.main_menu_fragment_container, taskViewFragment);
                             transaction.commit();
                         }
                     }
