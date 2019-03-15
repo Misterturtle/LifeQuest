@@ -23,8 +23,16 @@ public class TaskServiceTest extends DaggerTest {
 
     private TaskRepository mockTaskRepository;
 
+    private final static TaskEntity firstTaskEntity = TaskEntity.builder()
+            .title("First Task")
+            .build();
+
+    private final static TaskEntity secondTaskEntity = TaskEntity.builder()
+            .title("second Task")
+            .build();
+
     @Before
-    public void setup(){
+    public void setup() {
         daggerSetup();
 
         mockTaskRepository = testAppModule.makeFirestoreRepository();
@@ -35,7 +43,8 @@ public class TaskServiceTest extends DaggerTest {
     @SneakyThrows
     @Test
     public void getTasks_fetchesTasksFromRespository() {
-        List<TaskEntity> expectedTaskList = Arrays.asList(new TaskEntity("Turtle"), new TaskEntity("Tuttle"));
+
+        List<TaskEntity> expectedTaskList = Arrays.asList(firstTaskEntity, secondTaskEntity);
 
         when(mockTaskRepository.getTasks()).thenReturn(CompletableFuture.completedFuture(expectedTaskList));
 
@@ -46,14 +55,16 @@ public class TaskServiceTest extends DaggerTest {
 
     @Test
     public void addNewTask_updatesTheTaskListWithTheNewTaskAppended() {
-        List<TaskEntity> existingTaskList = Arrays.asList(new TaskEntity("Turtle"), new TaskEntity("Tuttle"));
+        List<TaskEntity> existingTaskList = Arrays.asList(firstTaskEntity, secondTaskEntity);
         when(mockTaskRepository.getTasks()).thenReturn(CompletableFuture.completedFuture(existingTaskList));
 
-        TaskEntity newTask = new TaskEntity("newTask");
+        TaskEntity newTask = TaskEntity.builder()
+                .title("newTask")
+                .build();
 
         subject.addNewTask(newTask);
 
-        List<TaskEntity> expectedTaskList = Arrays.asList(new TaskEntity("Turtle"), new TaskEntity("Tuttle"), newTask);
+        List<TaskEntity> expectedTaskList = Arrays.asList(firstTaskEntity, secondTaskEntity, newTask);
         verify(mockTaskRepository).setTasks(expectedTaskList);
     }
 

@@ -118,7 +118,8 @@ public class MainMenuImplTest extends DaggerTest {
 
     @Test
     public void givenSomeTasksTheMainViewDoesNotReflectsTaskView() {
-        when(mockTaskService.getTasks()).thenReturn(CompletableFuture.completedFuture(Arrays.asList(new TaskEntity("turtle"))));
+        TaskEntity someTaskEntity = TaskEntity.builder().build();
+        when(mockTaskService.getTasks()).thenReturn(CompletableFuture.completedFuture(Arrays.asList(someTaskEntity)));
 
         subject.onResume(mockQtn);
 

@@ -73,8 +73,13 @@ public class TaskViewFragmentImplTest extends DaggerTest {
         TaskCardViewQtn mockTaskView1 = mock(TaskCardViewQtn.class);
         TaskCardViewQtn mockTaskView2 = mock(TaskCardViewQtn.class);
 
-        TaskEntity firstTaskEntity = new TaskEntity("First Task");
-        TaskEntity secondTaskEntity = new TaskEntity("Second Task");
+        TaskEntity firstTaskEntity = TaskEntity.builder()
+                .title("First Task")
+                .build();
+
+        TaskEntity secondTaskEntity = TaskEntity.builder()
+                .title("Second Task")
+                .build();
 
         List<TaskEntity> retrievedTasks = Arrays.asList(firstTaskEntity, secondTaskEntity);
         when(mockTaskService.getTasks()).thenReturn(CompletableFuture.completedFuture(retrievedTasks));

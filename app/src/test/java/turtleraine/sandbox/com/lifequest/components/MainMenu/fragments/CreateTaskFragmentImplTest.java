@@ -38,6 +38,9 @@ public class CreateTaskFragmentImplTest extends DaggerTest {
     @Mock
     private TextView mockTaskNameInput;
 
+    @Mock
+    private TextView mockTaskDescriptionInput;
+
     CreateTaskFragmentImpl subject;
 
     private TaskService mockTaskService;
@@ -64,11 +67,14 @@ public class CreateTaskFragmentImplTest extends DaggerTest {
     @Test
     public void clickingTheCreateTaskButtonSavesTheTask() {
         String expectedTaskName = "newTask";
-        TaskEntity expectedTaskEntity = new TaskEntity(expectedTaskName);
+        String expectedTaskDescription = "taskDescription";
+        TaskEntity expectedTaskEntity = new TaskEntity(expectedTaskName, expectedTaskDescription);
         ArgumentCaptor<View.OnClickListener> captor = ArgumentCaptor.forClass(View.OnClickListener.class);
         when(mockView.findViewById(R.id.create_task_button)).thenReturn(mockCreateButton);
-        when(mockView.findViewById(R.id.taskNameInput)).thenReturn(mockTaskNameInput);
+        when(mockView.findViewById(R.id.task_name_input)).thenReturn(mockTaskNameInput);
         when(mockTaskNameInput.getText()).thenReturn(expectedTaskName);
+        when(mockView.findViewById(R.id.task_description_input)).thenReturn(mockTaskDescriptionInput);
+        when(mockTaskDescriptionInput.getText()).thenReturn(expectedTaskDescription);
 
         subject.onViewCreated(mockView, null);
 

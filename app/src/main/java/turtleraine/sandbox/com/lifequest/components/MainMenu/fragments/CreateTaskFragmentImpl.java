@@ -12,7 +12,6 @@ import javax.inject.Inject;
 import turtleraine.sandbox.com.lifequest.Application.Injector;
 import turtleraine.sandbox.com.lifequest.R;
 import turtleraine.sandbox.com.lifequest.entities.TaskEntity;
-import turtleraine.sandbox.com.lifequest.entities.UserEntity;
 import turtleraine.sandbox.com.lifequest.services.TaskService;
 
 public class CreateTaskFragmentImpl {
@@ -21,7 +20,8 @@ public class CreateTaskFragmentImpl {
     public TaskService taskService;
 
     private Button submitButton;
-    private TextView taskNameField;
+    private TextView taskNameInput;
+    private TextView taskDescriptionInput;
 
     public CreateTaskFragmentImpl() {
         Injector.getInjector().inject(this);
@@ -33,10 +33,15 @@ public class CreateTaskFragmentImpl {
 
     public void onViewCreated(View view, Bundle savedInstanceState) {
         submitButton = view.findViewById(R.id.create_task_button);
-        taskNameField = view.findViewById(R.id.taskNameInput);
+        taskNameInput = view.findViewById(R.id.task_name_input);
+        taskDescriptionInput = view.findViewById(R.id.task_description_input);
         submitButton.setOnClickListener(buttonView -> {
-            String taskName = taskNameField.getText().toString();
-            TaskEntity task = new TaskEntity(taskName);
+            String taskName = taskNameInput.getText().toString();
+            String taskDescription = taskDescriptionInput.getText().toString();
+            TaskEntity task = TaskEntity.builder()
+                    .title(taskName)
+                    .description(taskDescription)
+                    .build();
             taskService.addNewTask(task);
         });
     }
