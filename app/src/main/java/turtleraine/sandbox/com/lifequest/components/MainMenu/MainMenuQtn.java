@@ -14,8 +14,7 @@ import turtleraine.sandbox.com.lifequest.Application.Injector;
 
 public class MainMenuQtn extends AppCompatActivity {
 
-    @Inject
-    MainMenuImpl impl;
+    MainMenuImpl impl = new MainMenuImpl();
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {

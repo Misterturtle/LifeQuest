@@ -7,8 +7,7 @@ import javax.inject.Inject;
 
 public class MainActivity extends AppCompatActivity {
 
-    @Inject
-    MainActivityImpl impl;
+    MainActivityImpl impl = new MainActivityImpl();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

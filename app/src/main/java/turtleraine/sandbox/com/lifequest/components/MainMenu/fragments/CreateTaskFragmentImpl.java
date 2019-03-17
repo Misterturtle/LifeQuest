@@ -13,11 +13,16 @@ import turtleraine.sandbox.com.lifequest.Application.Injector;
 import turtleraine.sandbox.com.lifequest.R;
 import turtleraine.sandbox.com.lifequest.entities.TaskEntity;
 import turtleraine.sandbox.com.lifequest.services.TaskService;
+import turtleraine.sandbox.com.lifequest.state_store.AppState;
+import turtleraine.sandbox.com.lifequest.state_store.StateStore;
 
 public class CreateTaskFragmentImpl {
 
     @Inject
     public TaskService taskService;
+
+    @Inject
+    public StateStore stateStore;
 
     private Button submitButton;
     private TextView taskNameInput;
@@ -35,6 +40,18 @@ public class CreateTaskFragmentImpl {
         submitButton = view.findViewById(R.id.create_task_button);
         taskNameInput = view.findViewById(R.id.task_name_input);
         taskDescriptionInput = view.findViewById(R.id.task_description_input);
+
+        stateStore.subscribe(appState -> {
+            taskNameInput.setText(appState.taskBeingCreated.getTitle());
+            taskDescriptionInput.setText(appState.taskBeingCreated.getDescription());
+        });
+
+        taskNameInput.setOnFocusChangeListener(focusedView -> {
+            if(!focusedView.isFocused()){
+                stateStore.updateState();
+            }
+        });
+
         submitButton.setOnClickListener(buttonView -> {
             String taskName = taskNameInput.getText().toString();
             String taskDescription = taskDescriptionInput.getText().toString();

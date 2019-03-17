@@ -11,10 +11,14 @@ import org.junit.Test;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 
+import java.util.function.Consumer;
+
 import turtleraine.sandbox.com.lifequest.Application.DaggerTest;
 import turtleraine.sandbox.com.lifequest.R;
 import turtleraine.sandbox.com.lifequest.entities.TaskEntity;
 import turtleraine.sandbox.com.lifequest.services.TaskService;
+import turtleraine.sandbox.com.lifequest.state_store.AppState;
+import turtleraine.sandbox.com.lifequest.state_store.StateStore;
 
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.verify;
@@ -44,6 +48,7 @@ public class CreateTaskFragmentImplTest extends DaggerTest {
     CreateTaskFragmentImpl subject;
 
     private TaskService mockTaskService;
+    private StateStore mockStateStore;
 
     @Before
     public void setup() {
@@ -53,6 +58,11 @@ public class CreateTaskFragmentImplTest extends DaggerTest {
         subject = new CreateTaskFragmentImpl();
 
         mockTaskService = testAppModule.makeTaskService();
+        mockStateStore = testAppModule.makeStateStore();
+
+        when(mockView.findViewById(R.id.create_task_button)).thenReturn(mockCreateButton);
+        when(mockView.findViewById(R.id.task_name_input)).thenReturn(mockTaskNameInput);
+        when(mockView.findViewById(R.id.task_description_input)).thenReturn(mockTaskDescriptionInput);
     }
 
     @Test
@@ -65,15 +75,18 @@ public class CreateTaskFragmentImplTest extends DaggerTest {
     }
 
     @Test
+    public void test(){
+
+    }
+
+    @Test
     public void clickingTheCreateTaskButtonSavesTheTask() {
         String expectedTaskName = "newTask";
         String expectedTaskDescription = "taskDescription";
         TaskEntity expectedTaskEntity = new TaskEntity(expectedTaskName, expectedTaskDescription);
         ArgumentCaptor<View.OnClickListener> captor = ArgumentCaptor.forClass(View.OnClickListener.class);
-        when(mockView.findViewById(R.id.create_task_button)).thenReturn(mockCreateButton);
-        when(mockView.findViewById(R.id.task_name_input)).thenReturn(mockTaskNameInput);
+
         when(mockTaskNameInput.getText()).thenReturn(expectedTaskName);
-        when(mockView.findViewById(R.id.task_description_input)).thenReturn(mockTaskDescriptionInput);
         when(mockTaskDescriptionInput.getText()).thenReturn(expectedTaskDescription);
 
         subject.onViewCreated(mockView, null);
@@ -82,6 +95,29 @@ public class CreateTaskFragmentImplTest extends DaggerTest {
         captor.getValue().onClick(null);
 
         verify(mockTaskService).addNewTask(expectedTaskEntity);
+    }
+
+    @Test
+    public void onViewCreated_bindsTheCreateTaskPageToTheAppStore(){
+        String expectedTitle = "Turtle Task";
+        String expectedDescription = "A task for a turtle, duh";
+        TaskEntity expectedTask = TaskEntity.builder()
+                .title(expectedTitle)
+                .description(expectedDescription)
+                .build();
+        AppState state = AppState.builder()
+                .taskBeingCreated(expectedTask)
+                .build();
+
+        ArgumentCaptor<Consumer> subscriptionFn = ArgumentCaptor.forClass(Consumer.class);
+
+        subject.onViewCreated(mockView, null);
+
+        verify(mockStateStore).subscribe(subscriptionFn.capture());
+        subscriptionFn.getValue().accept(state);
+
+        verify(mockTaskNameInput).setText(expectedTitle);
+        verify(mockTaskDescriptionInput).setText(expectedDescription);
     }
 
 }

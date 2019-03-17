@@ -13,7 +13,6 @@ import turtleraine.sandbox.com.lifequest.Application.Injector;
 
 public class TaskViewFragmentQtn extends Fragment {
 
-
     TaskViewFragmentImpl impl = new TaskViewFragmentImpl();
 
     @Override

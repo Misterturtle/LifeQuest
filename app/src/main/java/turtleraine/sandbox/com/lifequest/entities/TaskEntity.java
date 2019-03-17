@@ -5,8 +5,8 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
+@EqualsAndHashCode
 @NoArgsConstructor
-@Data
 @Builder
 public class TaskEntity {
 
@@ -15,6 +15,6 @@ public class TaskEntity {
         this.description = description;
     }
 
-    String title;
-    String description;
+    public String title;
+    public String description;
 }

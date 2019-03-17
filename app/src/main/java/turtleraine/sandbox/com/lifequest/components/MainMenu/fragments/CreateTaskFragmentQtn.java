@@ -13,8 +13,7 @@ import turtleraine.sandbox.com.lifequest.Application.Injector;
 
 public class CreateTaskFragmentQtn extends Fragment {
 
-    @Inject
-    CreateTaskFragmentImpl impl;
+    CreateTaskFragmentImpl impl = new CreateTaskFragmentImpl();
 
     @Nullable
     @Override

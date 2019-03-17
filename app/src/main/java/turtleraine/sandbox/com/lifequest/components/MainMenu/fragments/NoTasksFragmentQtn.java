@@ -14,9 +14,7 @@ import turtleraine.sandbox.com.lifequest.Application.Injector;
 
 public class NoTasksFragmentQtn extends Fragment {
 
-
-    @Inject
-    NoTasksFragmentImpl impl;
+    NoTasksFragmentImpl impl = new NoTasksFragmentImpl();
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {

@@ -9,6 +9,7 @@ import turtleraine.sandbox.com.lifequest.Factories.IntentFactory;
 import turtleraine.sandbox.com.lifequest.dagger.AppModule;
 import turtleraine.sandbox.com.lifequest.repositories.FirestoreRepository;
 import turtleraine.sandbox.com.lifequest.services.TaskService;
+import turtleraine.sandbox.com.lifequest.state_store.StateStore;
 import turtleraine.sandbox.com.lifequest.wrappers.FirestoreWrapper;
 
 import static org.mockito.Mockito.mock;
@@ -21,34 +22,14 @@ public class TestAppModule extends AppModule {
         initMocks(this);
     }
 
-
     @Mock
-    private FirestoreWrapper mockFirestoreWrapper;
+    private FirestoreRepository mockFirestoreRepository;
     @Override
-    public FirestoreWrapper makeFirestoreWrapper() {
-        return mockFirestoreWrapper;
+    public FirestoreRepository makeFirestoreRepository() {
+        return mockFirestoreRepository;
     }
 
-    @Mock
-    private FragmentFactory mockFragmentFactory;
-    @Override
-    public FragmentFactory makeFragmentFactory() {
-        return mockFragmentFactory;
-    }
-
-    @Mock
-    private MainActivityImpl mockMainActivityImpl;
-    @Override
-    public MainActivityImpl makeMainActivityImpl() {
-        return mockMainActivityImpl;
-    }
-
-    @Mock
-    private IntentFactory mockIntentFactory;
-    @Override
-    public IntentFactory makeIntentFactory() {
-        return mockIntentFactory;
-    }
+    // ----------------------- Services ------------------ //
 
     @Mock
     private TaskService mockTaskService;
@@ -58,9 +39,34 @@ public class TestAppModule extends AppModule {
     }
 
     @Mock
-    private FirestoreRepository mockFirestoreRepository;
+    private FirestoreWrapper mockFirestoreWrapper;
     @Override
-    public FirestoreRepository makeFirestoreRepository() {
-        return mockFirestoreRepository;
+    public FirestoreWrapper makeFirestoreWrapper() {
+        return mockFirestoreWrapper;
     }
+
+    @Mock
+    private StateStore mockStateStore;
+    @Override
+    public StateStore makeStateStore() {
+        return mockStateStore;
+    }
+
+    // ----------------------- Factories -------------------- //
+
+    @Mock
+    private IntentFactory mockIntentFactory;
+    @Override
+    public IntentFactory makeIntentFactory() {
+        return mockIntentFactory;
+    }
+
+    @Mock
+    private FragmentFactory mockFragmentFactory;
+    @Override
+    public FragmentFactory makeFragmentFactory() {
+        return mockFragmentFactory;
+    }
+
+
 }
