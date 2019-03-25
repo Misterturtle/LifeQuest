@@ -1,6 +1,7 @@
 package turtleraine.sandbox.com.lifequest.components.MainMenu.fragments;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,7 +14,6 @@ import turtleraine.sandbox.com.lifequest.Application.Injector;
 import turtleraine.sandbox.com.lifequest.R;
 import turtleraine.sandbox.com.lifequest.entities.TaskEntity;
 import turtleraine.sandbox.com.lifequest.services.TaskService;
-import turtleraine.sandbox.com.lifequest.state_store.AppState;
 import turtleraine.sandbox.com.lifequest.state_store.StateStore;
 
 public class CreateTaskFragmentImpl {
@@ -42,13 +42,13 @@ public class CreateTaskFragmentImpl {
         taskDescriptionInput = view.findViewById(R.id.task_description_input);
 
         stateStore.subscribe(appState -> {
-            taskNameInput.setText(appState.taskBeingCreated.getTitle());
-            taskDescriptionInput.setText(appState.taskBeingCreated.getDescription());
+            taskNameInput.setText(appState.createTaskViewModel.title);
+            taskDescriptionInput.setText(appState.createTaskViewModel.description);
         });
 
-        taskNameInput.setOnFocusChangeListener(focusedView -> {
-            if(!focusedView.isFocused()){
-                stateStore.updateState();
+        taskNameInput.setOnFocusChangeListener((View v, boolean hasFocus) -> {
+            if(!hasFocus){
+                stateStore.updateState(appState -> appState.createTaskViewModel.title = taskNameInput.getText().toString());
             }
         });
 

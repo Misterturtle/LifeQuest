@@ -18,9 +18,14 @@ import turtleraine.sandbox.com.lifequest.R;
 import turtleraine.sandbox.com.lifequest.entities.TaskEntity;
 import turtleraine.sandbox.com.lifequest.services.TaskService;
 import turtleraine.sandbox.com.lifequest.state_store.AppState;
+import turtleraine.sandbox.com.lifequest.state_store.CreateTaskViewModel;
 import turtleraine.sandbox.com.lifequest.state_store.StateStore;
+import turtleraine.sandbox.com.lifequest.utils.FnHelper;
 
 import static org.junit.Assert.*;
+import static org.mockito.Matchers.any;
+import static org.mockito.Mockito.doAnswer;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
@@ -66,17 +71,12 @@ public class CreateTaskFragmentImplTest extends DaggerTest {
     }
 
     @Test
-    public void onCreateView_inflatesTheNoTasksFragmentLayout(){
+    public void onCreateView_inflatesTheNoTasksFragmentLayout() {
         when(mockInflater.inflate(R.layout.create_task_fragment_layout, mockViewGroup, false)).thenReturn(mockView);
 
         View result = subject.onCreateView(mockInflater, mockViewGroup, null, null);
 
         assertSame(mockView, result);
-    }
-
-    @Test
-    public void test(){
-
     }
 
     @Test
@@ -98,26 +98,40 @@ public class CreateTaskFragmentImplTest extends DaggerTest {
     }
 
     @Test
-    public void onViewCreated_bindsTheCreateTaskPageToTheAppStore(){
+    public void onViewCreated_bindsTheCreateTaskPageToTheAppStore() {
         String expectedTitle = "Turtle Task";
         String expectedDescription = "A task for a turtle, duh";
-        TaskEntity expectedTask = TaskEntity.builder()
+        CreateTaskViewModel expectedTask = CreateTaskViewModel.builder()
                 .title(expectedTitle)
                 .description(expectedDescription)
                 .build();
         AppState state = AppState.builder()
-                .taskBeingCreated(expectedTask)
+                .createTaskViewModel(expectedTask)
                 .build();
 
-        ArgumentCaptor<Consumer> subscriptionFn = ArgumentCaptor.forClass(Consumer.class);
+        FnHelper.callThroughConsumerWith(state).when(mockStateStore).subscribe(any());
 
         subject.onViewCreated(mockView, null);
-
-        verify(mockStateStore).subscribe(subscriptionFn.capture());
-        subscriptionFn.getValue().accept(state);
 
         verify(mockTaskNameInput).setText(expectedTitle);
         verify(mockTaskDescriptionInput).setText(expectedDescription);
     }
+
+    @Test
+    public void whenLosingFocusOfTaskNameInputItUpdatesTheAppStateWithTheInput() {
+        AppState initialAppState = AppState.builder().build();
+
+        String expectedTaskName = "SomeTaskName";
+        when(mockTaskNameInput.getText()).thenReturn(expectedTaskName);
+
+        FnHelper.callThroughFocusChangeListenerWith(null, false).when(mockTaskNameInput).setOnFocusChangeListener(any());
+
+        FnHelper.callThroughConsumerWith(initialAppState).when(mockStateStore).updateState(any());
+
+        subject.onViewCreated(mockView, null);
+
+        assertEquals(expectedTaskName, initialAppState.createTaskViewModel.title);
+    }
+
 
 }

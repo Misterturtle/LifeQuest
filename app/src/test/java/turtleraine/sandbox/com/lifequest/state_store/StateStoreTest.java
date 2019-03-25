@@ -4,7 +4,6 @@ import org.junit.Before;
 import org.junit.Test;
 
 import java.util.ArrayList;
-import java.util.UUID;
 
 import turtleraine.sandbox.com.lifequest.common.exceptions.CyclicalUpdate;
 import turtleraine.sandbox.com.lifequest.entities.TaskEntity;
@@ -48,58 +47,52 @@ public class StateStoreTest {
 
     @Test
     public void updateState_updatesTheCurrentState() {
-        TaskEntity taskEntity = TaskEntity.builder().title("SomeTask").build();
+        String expectedTitle = "SomeTask";
 
         subject.updateState(appState -> {
-            appState.taskBeingCreated.title = "SomeTask";
-            return appState;
+            appState.createTaskViewModel.title = expectedTitle;
         });
 
         AppState result = subject.getAppState();
-        assertSame(expectedAppState, result);
+        assertEquals(expectedTitle, result.createTaskViewModel.title);
     }
 
     @Test
     public void updateState_triggersAllSubscriptions() {
-        TaskEntity originalTask = TaskEntity.builder()
-                .title("Original Task")
-                .build();
-        AppState newAppState = AppState.builder()
-                .taskBeingCreated(originalTask)
-                .build();
-
+        String expectedTitle = "Original Task";
         AppState[] updatedAppState = new AppState[1];
         subject.subscribe(appState -> updatedAppState[0] = appState);
 
-        subject.updateState(newAppState);
+        subject.updateState(appState -> appState.createTaskViewModel.title = expectedTitle);
 
-        assertEquals(newAppState, updatedAppState[0]);
+        assertEquals(expectedTitle, updatedAppState[0].createTaskViewModel.title);
     }
 
     @Test
     public void atTheEndOfAnUpdateCycleItTriggersTheNextPendingState() {
         AppState originalState = subject.getAppState();
-        TaskEntity task1 = TaskEntity.builder()
+        CreateTaskViewModel task1 = CreateTaskViewModel.builder()
                 .title("Original Task")
                 .build();
         AppState state1 = AppState.builder()
-                .taskBeingCreated(task1)
+                .createTaskViewModel(task1)
                 .build();
 
 
-        TaskEntity task2 = TaskEntity.builder()
+        CreateTaskViewModel task2 = CreateTaskViewModel.builder()
                 .title("Another Task")
                 .build();
         AppState state2 = AppState.builder()
-                .taskBeingCreated(task2)
+                .createTaskViewModel(task2)
                 .build();
 
 
-        TaskEntity task3 = TaskEntity.builder()
-                .title("Some Other Task")
+        String expectedTitle = "Some Other Task";
+        CreateTaskViewModel task3 = CreateTaskViewModel.builder()
+                .title(expectedTitle)
                 .build();
         AppState state3 = AppState.builder()
-                .taskBeingCreated(task3)
+                .createTaskViewModel(task3)
                 .build();
 
         subject.pendingAppStates.add(state1);
@@ -107,7 +100,7 @@ public class StateStoreTest {
         ArrayList<AppState> stateSnapshots = new ArrayList<>();
 
         subject.subscribe(stateSnapshots::add);
-        subject.updateState(state3);
+        subject.updateState(appState -> appState.createTaskViewModel.title = expectedTitle);
 
         assertEquals(originalState, stateSnapshots.get(0));
         assertEquals(state1, stateSnapshots.get(1));
@@ -119,43 +112,32 @@ public class StateStoreTest {
     public void aSubscriptionThatUpdatesStateDoesNotUpdateStateMidUpdateCycle() {
         ArrayList<AppState> stateSnapshots = new ArrayList<>();
 
-        TaskEntity originalTask = TaskEntity.builder()
-                .title("Original Task")
-                .build();
-        AppState originalAppState = AppState.builder()
-                .taskBeingCreated(originalTask)
-                .build();
-
-
-        TaskEntity anotherTask = TaskEntity.builder()
-                .title("Another Task")
-                .build();
-        AppState anotherAppState = AppState.builder()
-                .taskBeingCreated(anotherTask)
-                .build();
+        String originalTitle = "Original Task";
+        String anotherTitle = "Another Task";
 
         subject.subscribe(appState -> {
-            subject.updateState(originalAppState);
+            subject.updateState(appStateCopy -> appStateCopy.createTaskViewModel.title = originalTitle);
         });
 
         subject.subscribe(stateSnapshots::add);
 
-        subject.updateState(anotherAppState);
+        subject.updateState(appStateCopy -> appStateCopy.createTaskViewModel.title = anotherTitle);
 
-        assertEquals(originalAppState, stateSnapshots.get(0));
-        assertEquals(anotherAppState, stateSnapshots.get(1));
-        assertEquals(originalAppState, stateSnapshots.get(2));
+        assertEquals(originalTitle, stateSnapshots.get(0).createTaskViewModel.title);
+        assertEquals(anotherTitle, stateSnapshots.get(1).createTaskViewModel.title);
+        assertEquals(originalTitle, stateSnapshots.get(2).createTaskViewModel.title);
         assertEquals(3, stateSnapshots.size());
     }
 
     @Test
     public void aSubscriptionWillNotTriggerIfTheAppStateIsExactlyTheSame() {
         AppState originalState = subject.getAppState();
-        TaskEntity newTask = TaskEntity.builder()
-                .title("Some Task")
+        String expectedTitle = "Some Task";
+        CreateTaskViewModel newTask = CreateTaskViewModel.builder()
+                .title(expectedTitle)
                 .build();
         AppState state1 = AppState.builder()
-                .taskBeingCreated(newTask)
+                .createTaskViewModel(newTask)
                 .build();
 
         subject.pendingAppStates.add(state1);
@@ -163,7 +145,7 @@ public class StateStoreTest {
         ArrayList<AppState> stateSnapshots = new ArrayList<>();
 
         subject.subscribe(stateSnapshots::add);
-        subject.updateState(state1);
+        subject.updateState(appState -> appState.createTaskViewModel.title = expectedTitle);
 
         assertEquals(originalState, stateSnapshots.get(0));
         assertEquals(state1, stateSnapshots.get(1));
@@ -173,27 +155,30 @@ public class StateStoreTest {
     @Test
     public void aSubscriptionWillNotTriggerIfTheAppStateIsEqualButNotTheSame() {
         AppState originalState = subject.getAppState();
-        TaskEntity newTask = TaskEntity.builder()
-                .title("Original Task")
+
+        String expectedTitle = "Original Task";
+        CreateTaskViewModel newTask = CreateTaskViewModel.builder()
+                .title(expectedTitle)
                 .build();
         AppState newAppState = AppState.builder()
-                .taskBeingCreated(newTask)
+                .createTaskViewModel(newTask)
                 .build();
 
 
-        TaskEntity anotherTask = TaskEntity.builder()
-                .title("Original Task")
+        CreateTaskViewModel anotherTask = CreateTaskViewModel.builder()
+                .title(expectedTitle)
                 .build();
         AppState anotherAppState = AppState.builder()
-                .taskBeingCreated(anotherTask)
+                .createTaskViewModel(anotherTask)
                 .build();
 
         subject.pendingAppStates.add(newAppState);
         subject.pendingAppStates.add(anotherAppState);
-        ArrayList<AppState> stateSnapshots = new ArrayList<>();
 
+        ArrayList<AppState> stateSnapshots = new ArrayList<>();
         subject.subscribe(stateSnapshots::add);
-        subject.updateState(anotherAppState);
+
+        subject.updateState(appState -> appState.createTaskViewModel.title = expectedTitle);
 
         assertEquals(newAppState, anotherAppState);
         assertEquals(originalState, stateSnapshots.get(0));
@@ -204,25 +189,16 @@ public class StateStoreTest {
     @Test
     public void cyclicalSubscriptionsWillThrowAnError() {
 
+        String task1 = "Task1";
+        String task2 = "Task2";
+
         try {
             subject.subscribe(appState -> {
-                TaskEntity task = TaskEntity.builder()
-                        .title("Task1")
-                        .build();
-                AppState state = AppState.builder()
-                        .taskBeingCreated(task)
-                        .build();
-                subject.updateState(state);
+                subject.updateState(mutatableAppState -> mutatableAppState.createTaskViewModel.title = task1);
             });
 
             subject.subscribe(appState -> {
-                TaskEntity task = TaskEntity.builder()
-                        .title("Task2")
-                        .build();
-                AppState state = AppState.builder()
-                        .taskBeingCreated(task)
-                        .build();
-                subject.updateState(state);
+                subject.updateState(mutatableAppState -> mutatableAppState.createTaskViewModel.title = task2);
             });
 
             fail();

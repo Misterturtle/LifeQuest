@@ -36,8 +36,11 @@ public class StateStore {
         return state;
     }
 
-    public void updateState(Function<AppState, AppState> updateFn) {
-        pendingAppStates.add(newAppState);
+    public void updateState(Consumer<AppState> mutationFn) {
+        AppState newState = state.copy();
+        mutationFn.accept(newState);
+
+        pendingAppStates.add(newState);
 
         if (!updateCycleIsRunning) {
             triggerUpdateCycle();

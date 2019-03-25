@@ -14,6 +14,7 @@ import turtleraine.sandbox.com.lifequest.components.MainMenu.fragments.CreateTas
 import turtleraine.sandbox.com.lifequest.components.MainMenu.fragments.NoTasksFragmentQtn;
 import turtleraine.sandbox.com.lifequest.components.MainMenu.fragments.TaskViewFragmentQtn;
 import turtleraine.sandbox.com.lifequest.services.TaskService;
+import turtleraine.sandbox.com.lifequest.state_store.AppState;
 
 /**
  * Created by rconaway on 2/18/19.
@@ -26,6 +27,9 @@ public class MainMenuImpl {
 
     @Inject
     TaskService taskService;
+
+    @Inject
+    AppState appState;
 
     public void onCreate(Bundle bundle, MainMenuQtn qtn) {
         Injector.getInjector().inject(this);
@@ -49,6 +53,9 @@ public class MainMenuImpl {
     }
 
     public void onResume(MainMenuQtn qtn) {
+
+
+
         taskService.getTasks()
                 .whenComplete((tasks, error) -> {
                     if (tasks != null) {

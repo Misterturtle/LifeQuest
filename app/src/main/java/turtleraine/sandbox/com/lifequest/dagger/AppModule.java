@@ -60,6 +60,7 @@ public class AppModule {
     @Provides
     @Singleton
     protected FragmentFactory makeFragmentFactory() {
+
         return new FragmentFactory();
     }
 }

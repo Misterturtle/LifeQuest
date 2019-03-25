@@ -2,16 +2,18 @@ package turtleraine.sandbox.com.lifequest.state_store;
 
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
-import turtleraine.sandbox.com.lifequest.entities.TaskEntity;
 
 @EqualsAndHashCode
 @Builder
 public class AppState implements AppStateViewModel<AppState> {
 
-    public TaskEntity taskBeingCreated;
+    @Builder.Default
+    public CreateTaskViewModel createTaskViewModel = CreateTaskViewModel.builder().build();
 
     @Override
     public AppState copy() {
-        return AppState.builder().taskBeingCreated;
+        return AppState.builder()
+                .createTaskViewModel(createTaskViewModel.copy())
+                .build();
     }
 }
